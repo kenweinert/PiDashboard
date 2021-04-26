@@ -1,5 +1,10 @@
 #!/bin/bash
 
-# pull the latest from the master branch
+# pull the latest from the specified branch
 
-git checkout master && git pull
+if [ "$1" = "" ]; then
+	echo "You must supply a release to pull"
+	exit;
+fi
+
+git checkout $1 && git pull

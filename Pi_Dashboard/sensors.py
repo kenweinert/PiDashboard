@@ -1,6 +1,5 @@
 from flask import current_app as app
 from builtins import staticmethod
-from w1thermsensor.core import convert_raw_temperature_to_sensor_count
 
 try:
     from w1thermsensor  import W1ThermSensor

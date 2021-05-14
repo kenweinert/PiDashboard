@@ -8,7 +8,7 @@ except Exception:
     
 class Sensors:
     @staticmethod
-    def get_external_temp():
+    def get_external_temps():
         """
         Safely read the external temperature
         :return: Integer of current temperature
@@ -16,8 +16,8 @@ class Sensors:
         app.logger.info("Starting to read temperature sensor")
         
         try:
-            sensor = W1ThermSensor()
-            temperature = sensor.get_temperature()
+            for sensor in W1ThermSensor.get_available_sensors():
+                temperature += {sensor.id + ":" + sensor.get_temperature()}
         except TypeError as e:
             app.logger.warning(f"Unable to use primary temperature sensor in this environment: {e}")
             temperature = 0
@@ -27,6 +27,6 @@ class Sensors:
         
         app.logger.info("Finished reading temperature sensor")
         app.logger.debug(f"Temperature: {temperature}")
-        return int(temperature)
+        return temperature
 
                 

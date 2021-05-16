@@ -1,6 +1,6 @@
 from flask import current_app as app
 from gpiozero import Button, exc
-from builtins import staticmethod, None
+from builtins import staticmethod
 
 try:
     from w1thermsensor  import W1ThermSensor

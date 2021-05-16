@@ -1,5 +1,5 @@
 from flask import current_app as app
-from gpiozero import Button, exc
+from gpiozero import Button, exc, LightSensor
 from builtins import staticmethod
 
 try:
@@ -61,4 +61,36 @@ class Sensors:
         app.logger.debug(f"Trunk: {result}")
         app.logger.info("Finished reading trunk sensor")
         
-        return result           
+        return result
+    
+    @staticmethod
+    def get_light_status():
+        """
+        Safely read the light and calculate a status
+        Daytime/Dusk/Nighttime/Unknown
+        :return: String - light status
+        """
+        app.logger.info("Starting to read available light")
+        status = -1
+        
+        try:
+            sensor = LightSensor(pin=15)
+            status = float(sensor.value)
+        except exc.BadPinFactory as e:
+            app.logger.warning(f"Unable to use light sensor in this environment: {e}")
+        except Exception as e:
+            app.logger.error(f"Unknown problem with light sensor {e}")
+            
+        if status == -1:
+            result = "Unknown"
+        elif status >= 0.5:
+            result = "Daytime"
+        else:
+            result = "Nighttime"
+        
+        app.logger.debug(f"Light: {status} - {result}")
+        app.logger.info("Finished reading available light")
+        
+        return result
+    
+                           

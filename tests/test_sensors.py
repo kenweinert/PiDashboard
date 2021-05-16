@@ -2,6 +2,7 @@ from unittest.mock import patch
 from Pi_Dashboard.sensors import Sensors
 from gpiozero import exc
 
+
 class TestSensors:
     @patch("Pi_Dashboard.sensors.Button")
     def test_get_trunk_status_bad_pin_factory(self, mock_button):

@@ -51,10 +51,13 @@ class TestSensors:
             (0.49, "Nighttime"),
             (0.4, "Nighttime"),
             (0, "Nighttime"),
-            (None, "Unknown")
-            ])
+            (None, "Unknown"),
+        ],
+    )
     @patch("Pi_Dashboard.sensors.LightSensor")
-    def test_get_light_status_values(self, mock_light_sensor, sensor_value, expected_result):
+    def test_get_light_status_values(
+        self, mock_light_sensor, sensor_value, expected_result
+    ):
         mock_light_sensor.return_value = type("Button", (), {"value": sensor_value})
         result = Sensors.get_light_status()
         assert result == expected_result

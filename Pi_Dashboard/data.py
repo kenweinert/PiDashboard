@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify
-from .sensors import  Sensors
+from .sensors import Sensors
 from flask import current_app as app
 
 data_blueprint = Blueprint("data", __name__)
+
 
 @data_blueprint.route("/")
 def show():
@@ -10,9 +11,13 @@ def show():
     temperature = Sensors.get_external_temps()
     trunk_status = Sensors.get_trunk_status()
     light_status = Sensors.get_light_status()
-    
-    result = {"Temperature" : temperature, "Trunk Status" : trunk_status, "Light" : light_status}
-    
+
+    result = {
+        "Temperature": temperature,
+        "Trunk Status": trunk_status,
+        "Light": light_status,
+    }
+
     app.logger.info("Finished retrieving core data")
     app.logger.debug(f"Core data: {result}")
     return jsonify(result)

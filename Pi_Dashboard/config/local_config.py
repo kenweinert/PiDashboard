@@ -10,5 +10,5 @@ PREFERRED_URL_SCHEME = "http"
 # Possible logging levels:
 # CRITICAL - FATAL - ERROR - WARNING - INFO- NOTSET
 LOGGER_LEVEL = "DEBUG"
-LOG_FILE_NAME = "PiDashboard.log" 
+LOG_FILE_NAME = "PiDashboard.log"
 FILE_LOGGING = True

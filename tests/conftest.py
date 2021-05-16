@@ -8,5 +8,5 @@ def build_testing_app():
     """
     app = create_app(config_file = "config/test_config.py")
     app.app_context().push()
-    
+
     yield app

@@ -37,39 +37,51 @@ class Sensors:
         return temperature
 
     @staticmethod
-    def get_trunk_status():
+    def get_bool_pin(pin):
         """
-        Safely read the trunk sensor and calculate the state:
-        Open, Closed, Unknown
-        :return: String - trunk status
+        Defensively read boolean pin as a button
+        :param pin: GPIO pin (in BCM layout) to read
+        :return: Boolean result -- pressed, not pressed, None
         """
-        app.logger.info("Starting to read the trunk sensor")
-        result = None
-        status = None
+        app.logger.info(f"Starting to read boolean value from pin: {pin}")
 
         try:
-            button = Button(pin=14)
-            status = button.is_pressed
+            button = Button(pin=pin, pull_up=false)
+            result = button.is_pressed
         except exc.BadPinFactory as e:
             app.logger.warning(
-                f"Unable to use the trunk sensor in this environment: {e}"
+                f"Unable to use pin sensor in this environment: {e}"
             )
-            result = "Unknown"
+            result = None
         except Exception as e:
-            app.logger.error(f"Unknown problem with trunk sensor: {e}")
-            result = "Unknown"
+            app.logger.error(f"Unknown problem with pin sensor: {e}")
+            result = None
 
-        if not result:
-            if status:
-                result = "Closed"
-            else:
-                result = "Open"
-
-        app.logger.debug(f"Trunk: {result}")
-        app.logger.info("Finished reading trunk sensor")
+        app.logger.info(f"Finished reading boolean value from pin: {pin}")
 
         return result
 
+    @classmethod
+    def get_trunk_status(cls):
+        """
+        Safely read the trunk sensor and calculate the state - open/closed/unavailable/unknown
+        :return: String - trunk status
+        """
+        app.logger.info("Starting to read the trunk sensor")
+        button_status = cls.get_bool_pin(pin=14)
+        if button_status is None:
+            result = "Unknown"
+        else:
+            if button_status:
+                result = "Closed"
+            else:
+                result = "Open"
+        
+        app.logger.debug(f"Trunk: {result}")
+        app.logger.info("Finished reading trunk sensor")
+        
+        return result
+    
     @staticmethod
     def get_light_status():
         """

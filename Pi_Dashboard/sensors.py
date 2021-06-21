@@ -46,7 +46,7 @@ class Sensors:
         app.logger.info(f"Starting to read boolean value from pin: {pin}")
 
         try:
-            button = Button(pin=pin, pull_up=false)
+            button = Button(pin=pin, pull_up=False)
             result = button.is_pressed
         except exc.BadPinFactory as e:
             app.logger.warning(

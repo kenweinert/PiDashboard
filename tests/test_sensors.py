@@ -29,13 +29,13 @@ class TestSensors:
         result = Sensors.get_trunk_status()
         assert result == "Open"
 
-    @patch("Pi_Dashboard.sensors.LightSensor")
+    @patch("Pi_Dashboard.sensors.MCP3008")
     def test_get_light_status_bad_pin_factory(self, mock_light_sensor):
         mock_light_sensor.side_effect = exc.BadPinFactory
         result = Sensors.get_light_status()
         assert result == "Unknown"
 
-    @patch("Pi_Dashboard.sensors.LightSensor")
+    @patch("Pi_Dashboard.sensors.MCP3008")
     def test_get_light_status_other_pin_error(self, mock_light_sensor):
         mock_light_sensor.side_effect = TypeError
         result = Sensors.get_light_status()
@@ -54,7 +54,7 @@ class TestSensors:
             (None, "Unknown"),
         ],
     )
-    @patch("Pi_Dashboard.sensors.LightSensor")
+    @patch("Pi_Dashboard.sensors.MCP3008")
     def test_get_light_status_values(
         self, mock_light_sensor, sensor_value, expected_result
     ):

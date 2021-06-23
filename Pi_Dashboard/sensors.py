@@ -1,5 +1,5 @@
 from flask import current_app as app
-from gpiozero import Button, exc, LightSensor, MCP3008
+from gpiozero import Button, exc, MCP3008
 from builtins import staticmethod
 
 try:
@@ -93,8 +93,6 @@ class Sensors:
         try:
             sensor = MCP3008(channel=0)
             status = 3.3 * sensor.value
-        except exc.BadPinFactory as e:
-            app.logger.warning(f"Unable to use light sensor in this environment: {e}")
         except Exception as e:
             app.logger.error(f"Unknown problem with light sensor {e}")
 

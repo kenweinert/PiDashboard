@@ -1,5 +1,5 @@
 from flask import current_app as app
-from gpiozero import Button, exc, LightSensor
+from gpiozero import Button, exc, MCP3008
 from builtins import staticmethod
 
 try:
@@ -37,27 +37,25 @@ class Sensors:
         return temperature
 
     @staticmethod
-    def get_bool_pin(pin):
+    def get_bool_pin(input_pin, pull_up_value):
         """
         Defensively read boolean pin as a button
         :param pin: GPIO pin (in BCM layout) to read
         :return: Boolean result -- pressed, not pressed, None
         """
-        app.logger.info(f"Starting to read boolean value from pin: {pin}")
+        app.logger.info(f"Starting to read boolean value from pin: {input_pin}")
 
         try:
-            button = Button(pin=pin, pull_up=False)
+            button = Button(pin=input_pin, pull_up=pull_up_value)
             result = button.is_pressed
         except exc.BadPinFactory as e:
-            app.logger.warning(
-                f"Unable to use pin sensor in this environment: {e}"
-            )
+            app.logger.warning(f"Unable to use pin sensor in this environment: {e}")
             result = None
         except Exception as e:
             app.logger.error(f"Unknown problem with pin sensor: {e}")
             result = None
 
-        app.logger.info(f"Finished reading boolean value from pin: {pin}")
+        app.logger.info(f"Finished reading boolean value from pin: {input_pin}/{result}")
 
         return result
 
@@ -68,7 +66,7 @@ class Sensors:
         :return: String - trunk status
         """
         app.logger.info("Starting to read the trunk sensor")
-        button_status = cls.get_bool_pin(pin=14)
+        button_status = cls.get_bool_pin(input_pin=14, pull_up_value=True)
         if button_status is None:
             result = "Unknown"
         else:
@@ -93,10 +91,8 @@ class Sensors:
         status = -1
 
         try:
-            sensor = LightSensor(pin=15)
-            status = float(sensor.value)
-        except exc.BadPinFactory as e:
-            app.logger.warning(f"Unable to use light sensor in this environment: {e}")
+            sensor = MCP3008(channel=0)
+            status = 3.3 * sensor.value
         except Exception as e:
             app.logger.error(f"Unknown problem with light sensor {e}")
 

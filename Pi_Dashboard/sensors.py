@@ -1,6 +1,7 @@
 from flask import current_app as app
 from gpiozero import Button, exc, MCP3008
 from builtins import staticmethod
+from RPi import GPIO
 
 try:
     from w1thermsensor import W1ThermSensor
@@ -90,6 +91,11 @@ class Sensors:
         app.logger.info("Starting to read available light")
         status = -1
 
+        pin = 7
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(pin, GPIO.OUT)
+        GPIO.output(pin, false)
+        
         try:
             sensor = MCP3008(channel=0)
             status = 3.3 * sensor.value
